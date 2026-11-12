@@ -64,30 +64,52 @@ updateBlurSlider();
 
 // DROPDOWN MENU
 const btn = document.getElementById('dropdown-btn');
-const menu = document.getElementById('dropdown-menu');
+const dropdown = btn.closest('.dropdown');
+const header = btn.closest('.header');
 
-btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = menu.getAttribute('aria-hidden') === 'false';
+let menuIsOpen = false;
 
-    if (!isOpen) {
-        document.querySelectorAll('.dropdown-content[aria-hidden="false"]').forEach(m => {
-            m.setAttribute('aria-hidden', 'true');
-            m.parentElement.classList.remove('open');
-        });
+function openMenu() {
+    if (menuIsOpen) return;
+
+    menuIsOpen = true;
+
+    header.classList.add('mobile-menu-open');
+    dropdown.classList.add('open');
+
+    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-label', 'Закрыть меню');
+}
+
+function closeMenu() {
+    if (!menuIsOpen) return;
+
+    menuIsOpen = false;
+
+    header.classList.remove('mobile-menu-open');
+    dropdown.classList.remove('open');
+
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Открыть меню');
+}
+
+btn.addEventListener('click', () => {
+    if (menuIsOpen) {
+        closeMenu();
+    } else {
+        openMenu();
     }
-
-    const newState = isOpen ? 'true' : 'false';
-    menu.setAttribute('aria-hidden', newState);
-    btn.parentElement.classList.toggle('open', newState === 'false');
 });
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-content').forEach(m => {
-            m.setAttribute('aria-hidden', 'true');
-            m.parentElement.classList.remove('open');
-        });
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuIsOpen) {
+        closeMenu();
+    }
+});
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 640 && menuIsOpen) {
+        closeMenu();
     }
 });
 // --------------------
