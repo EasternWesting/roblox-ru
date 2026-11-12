@@ -1,152 +1,275 @@
-// RULES BUTTONS, RULES TEXTS
-const buttons = document.querySelectorAll('.rules-btns button');
-const blocks = document.querySelectorAll('.rules');
 
-buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        blocks.forEach(el => el.classList.remove('active'));
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
-
-        document.getElementById('ri1').textContent = btn.dataset.title;
-        document.getElementById('ri2').textContent = btn.dataset.subtitle;
-    });
-});
-// --------------------
-
-// BACKGROUND TRANSPARENCY
-const transp_slider = document.getElementById('transp_slider');
-const bg_transp = 'bg-transp';
-const transpTxt = document.getElementById('transpTxt')
-
-function updateTranspSlider() {
-    const transp = transp_slider.value;
-    const newTransp = `rgba(0, 0, 0, ${transp})`;
-    const transp_percent = Math.round(transp * 100);
-
-    document.documentElement.style.setProperty('--bg', newTransp);
-    transpTxt.textContent = `Прозрачность: ${transp_percent}%`;
-    localStorage.setItem(bg_transp, transp);
-}
-
-const savedTransp = localStorage.getItem(bg_transp);
-if (savedTransp !== null) {
-    transp_slider.value = savedTransp;
-}
-
-transp_slider.addEventListener('input', updateTranspSlider);
-updateTranspSlider();
-// --------------------
-
-// BACKGROUND BLUR
-const blur_slider = document.getElementById('blur_slider');
-const bg_blur = 'bg-blur';
-const blurTxt = document.getElementById('blurTxt')
-
-function updateBlurSlider() {
-    const blur = blur_slider.value;
-    const newBlur = `${blur}px`;
-
-    document.documentElement.style.setProperty('--blur', newBlur);
-    blurTxt.textContent = `Размытие: ${blur} ур.`;
-    localStorage.setItem(bg_blur, blur);
-}
-
-const saved_blur = localStorage.getItem(bg_blur);
-if (saved_blur !== null) {
-    blur_slider.value = saved_blur;
-}
-
-blur_slider.addEventListener('input', updateBlurSlider);
-updateBlurSlider();
-// --------------------
-
-// DROPDOWN MENU
-const btn = document.getElementById('dropdown-btn');
-const dropdown = btn.closest('.dropdown');
-const header = btn.closest('.header');
-
-let menuIsOpen = false;
-
-function openMenu() {
-    if (menuIsOpen) return;
-
-    menuIsOpen = true;
-
-    header.classList.add('mobile-menu-open');
-    dropdown.classList.add('open');
-
-    btn.setAttribute('aria-expanded', 'true');
-    btn.setAttribute('aria-label', 'Закрыть меню');
-}
-
-function closeMenu() {
-    if (!menuIsOpen) return;
-
-    menuIsOpen = false;
-
-    header.classList.remove('mobile-menu-open');
-    dropdown.classList.remove('open');
-
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('aria-label', 'Открыть меню');
-}
-
-btn.addEventListener('click', () => {
-    if (menuIsOpen) {
-        closeMenu();
-    } else {
-        openMenu();
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && menuIsOpen) {
-        closeMenu();
-    }
-});
-
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 640 && menuIsOpen) {
-        closeMenu();
-    }
-});
-// --------------------
-
-// NOTIFICATION
 document.addEventListener('DOMContentLoaded', () => {
-    const notification = document.getElementById('notification');
-    const notificationText = notification.querySelector('.notification-text');
 
-    let notificationTimer;
+    // =====================================
+    // RULES BUTTONS / RULES TEXTS
+    // =====================================
 
-    const messages = {
-        'IND': 'IND (Indulgence) — При первом нарушении данного пункта нарушителю будет выдано устное предупреждение.',
-        'IND-T': 'IND (Indulgence) — Если участник находится на сервере менее 14-ти дней, то за первое нарушение данного пункта нарушителю будет выдано устное предупреждение.',
-        'RES': 'RES (Reset) — В некоторых случаях за нарушение данного пункта нарушителю может быть снято XP в !rank.',
-        'TOS': 'ToS (Terms of Service) — Условия предоставления сервисов Discord. Данный пункт взят из правил ToS Discord.',
-        'AUTO-MOD': 'AUTO MOD (Automatic Moderation) — Данный пункт частично или полностью модерируется с помощью автомодерации бота JuniperBot.',
-        'REGEX': 'RegeX — Данный пункт частично модерируется с помощью автоматической системы, проверяющей профиль участника на наличие запрещенных символов.'
-    };
+    const rulesButtons = document.querySelector('.rules-btns');
 
-    function hideNotification() {
-        clearTimeout(notificationTimer);
-        notification.classList.remove('visible');
+    if (rulesButtons) {
+        rulesButtons.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+
+            if (!btn || !rulesButtons.contains(btn)) return;
+
+            const target = document.getElementById(btn.dataset.target);
+
+            if (!target) return;
+
+            document.querySelector('.rules.active')
+                ?.classList.remove('active');
+
+            rulesButtons.querySelector('.active')
+                ?.classList.remove('active');
+
+            btn.classList.add('active');
+            target.classList.add('active');
+
+            const ri1 = document.getElementById('ri1');
+            const ri2 = document.getElementById('ri2');
+
+            if (ri1) ri1.textContent = btn.dataset.title || '';
+            if (ri2) ri2.textContent = btn.dataset.subtitle || '';
+        });
     }
 
-    notification.addEventListener('click', hideNotification);
 
-    document.querySelectorAll('.IND, .IND-T, .RES, .TOS, .AUTO-MOD, .REGEX').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const className = [...btn.classList].find(c => c in messages);
-            notificationText.textContent = messages[className] || '???';
+    // =====================================
+    // BACKGROUND TRANSPARENCY / BLUR
+    // =====================================
+
+    function setupSlider({
+        sliderId,
+        textId,
+        storageKey,
+        cssVariable,
+        cssValue,
+        textValue
+    }) {
+        const slider = document.getElementById(sliderId);
+        const output = document.getElementById(textId);
+
+        if (!slider) return;
+
+        // Load saved value
+        const saved = localStorage.getItem(storageKey);
+
+        if (saved !== null) {
+            slider.value = saved;
+        }
+
+        let frame = null;
+
+        function update() {
+            const value = slider.value;
+
+            document.documentElement.style.setProperty(
+                cssVariable,
+                cssValue(value)
+            );
+
+            if (output) {
+                output.textContent = textValue(value);
+            }
+        }
+
+        // Optimized real-time update
+        slider.addEventListener('input', () => {
+            if (frame !== null) return;
+
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                update();
+            });
+        });
+
+        // Save after interaction
+        slider.addEventListener('change', () => {
+            if (frame !== null) {
+                cancelAnimationFrame(frame);
+                frame = null;
+            }
+
+            update();
+
+            localStorage.setItem(
+                storageKey,
+                slider.value
+            );
+        });
+
+        // Initial update
+        update();
+    }
+
+
+    // TRANSPARENCY
+
+    setupSlider({
+        sliderId: 'transp_slider',
+        textId: 'transpTxt',
+        storageKey: 'bg-transp',
+        cssVariable: '--bg',
+
+        cssValue: value =>
+            `rgba(0, 0, 0, ${value})`,
+
+        textValue: value =>
+            `Прозрачность: ${Math.round(value * 100)}%`
+    });
+
+
+    // BLUR
+
+    setupSlider({
+        sliderId: 'blur_slider',
+        textId: 'blurTxt',
+        storageKey: 'bg-blur',
+        cssVariable: '--blur',
+
+        cssValue: value =>
+            `${value}px`,
+
+        textValue: value =>
+            `Размытие: ${value} ур.`
+    });
+
+
+
+    // =====================================
+    // DROPDOWN MENU
+    // =====================================
+
+    const menuButton = document.getElementById('dropdown-btn');
+
+    if (menuButton) {
+
+        const dropdown = menuButton.closest('.dropdown');
+        const header = menuButton.closest('.header');
+
+        let menuIsOpen = false;
+
+        function openMenu() {
+            if (menuIsOpen) return;
+
+            menuIsOpen = true;
+
+            header?.classList.add('mobile-menu-open');
+            dropdown?.classList.add('open');
+
+            menuButton.setAttribute('aria-expanded', 'true');
+            menuButton.setAttribute('aria-label', 'Закрыть меню');
+        }
+
+        function closeMenu() {
+            if (!menuIsOpen) return;
+
+            menuIsOpen = false;
+
+            header?.classList.remove('mobile-menu-open');
+            dropdown?.classList.remove('open');
+
+            menuButton.setAttribute('aria-expanded', 'false');
+            menuButton.setAttribute('aria-label', 'Открыть меню');
+        }
+
+        menuButton.addEventListener('click', () => {
+            if (menuIsOpen) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 640) {
+                closeMenu();
+            }
+        });
+    }
+
+
+
+    // =====================================
+    // NOTIFICATIONS
+    // =====================================
+
+    const notification = document.getElementById('notification');
+
+    const notificationText = notification
+        ?.querySelector('.notification-text');
+
+    if (notification && notificationText) {
+
+        let notificationTimer;
+
+        const messages = {
+
+            'IND':
+                'IND (Indulgence) — При первом нарушении данного пункта нарушителю будет выдано устное предупреждение.',
+
+            'IND-T':
+                'IND (Indulgence) — Если участник находится на сервере менее 14-ти дней, то за первое нарушение данного пункта нарушителю будет выдано устное предупреждение.',
+
+            'RES':
+                'RES (Reset) — В некоторых случаях за нарушение данного пункта нарушителю может быть снято XP в !rank.',
+
+            'TOS':
+                'ToS (Terms of Service) — Условия предоставления сервисов Discord. Данный пункт взят из правил ToS Discord.',
+
+            'AUTO-MOD':
+                'AUTO MOD (Automatic Moderation) — Данный пункт частично или полностью модерируется с помощью автомодерации бота JuniperBot.',
+
+            'REGEX':
+                'RegeX — Данный пункт частично модерируется с помощью автоматической системы, проверяющей профиль участника на наличие запрещенных символов.'
+
+        };
+
+
+        function hideNotification() {
+            clearTimeout(notificationTimer);
+
+            notification.classList.remove('visible');
+        }
+
+
+        notification.addEventListener('click', hideNotification);
+
+
+        document.addEventListener('click', (e) => {
+
+            const target = e.target.closest(
+                '.IND, .IND-T, .RES, .TOS, .AUTO-MOD, .REGEX'
+            );
+
+            if (!target) return;
+
+            const className = [...target.classList].find(
+                name => Object.hasOwn(messages, name)
+            );
+
+            if (!className) return;
+
+            notificationText.textContent = messages[className];
 
             clearTimeout(notificationTimer);
 
             notification.classList.add('visible');
-            notificationTimer = setTimeout(hideNotification, 5000);
+
+            notificationTimer = setTimeout(
+                hideNotification,
+                5000
+            );
+
         });
-    });
+
+    }
+
 });
-// --------------------
