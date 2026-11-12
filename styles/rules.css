@@ -20,6 +20,61 @@ html, body {
     display: flow-root;
     min-height: 100vh;
     overflow-x: hidden;
+    background: rgba(15,15,15);
+    z-index: -2;
+}
+
+.loader-overlay {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(15, 15, 15);
+    z-index: 9999;
+}
+
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top: 4px solid var(--custom);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loader-overlay p {
+    color: var(--white);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-overlay.hidden {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+}
+
+.skip-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: rgba(236, 154, 78, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: scale 0.3s ease;
+}
+
+.skip-btn:hover {
+    scale: 1.1;
 }
 
 .background-video {
@@ -39,7 +94,6 @@ html, body {
     position: fixed;
     min-width: 200px;
     text-align: center;
-    color: rgba(255,255,255,0.5);
     top: 50px;
     left: 50%;
     padding: 15px 30px;
@@ -80,6 +134,7 @@ html, body {
 
 .notification-text {
     display: flex;
+    color: var(--white);
 }
 
 ch-dsgn {

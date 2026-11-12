@@ -1,3 +1,14 @@
+const loader = document.getElementById('loader');
+const skipBtn = document.getElementById('skip-loader');
+
+function hideLoader() {
+    if (loader) {
+        loader.classList.add('hidden');
+    }
+}
+
+skipBtn.addEventListener('click', hideLoader);
+window.addEventListener('load', hideLoader);
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -10,11 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rulesButtons) {
         rulesButtons.addEventListener('click', (e) => {
             const btn = e.target.closest('button');
-
             if (!btn || !rulesButtons.contains(btn)) return;
 
             const target = document.getElementById(btn.dataset.target);
-
             if (!target) return;
 
             document.querySelector('.rules.active')
@@ -34,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     // =====================================
     // BACKGROUND TRANSPARENCY / BLUR
     // =====================================
@@ -51,8 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const output = document.getElementById(textId);
 
         if (!slider) return;
-
-        // Load saved value
         const saved = localStorage.getItem(storageKey);
 
         if (saved !== null) {
@@ -74,17 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Optimized real-time update
         slider.addEventListener('input', () => {
             if (frame !== null) return;
 
-            frame = requestAnimationFrame(() => {
-                frame = null;
-                update();
-            });
+            frame = requestAnimationFrame(() => {frame = null; update();});
         });
 
-        // Save after interaction
         slider.addEventListener('change', () => {
             if (frame !== null) {
                 cancelAnimationFrame(frame);
@@ -92,62 +93,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             update();
-
-            localStorage.setItem(
-                storageKey,
-                slider.value
-            );
+            localStorage.setItem(storageKey, slider.value);
         });
 
-        // Initial update
         update();
     }
 
-
     // TRANSPARENCY
-
     setupSlider({
         sliderId: 'transp_slider',
         textId: 'transpTxt',
         storageKey: 'bg-transp',
         cssVariable: '--bg',
 
-        cssValue: value =>
-            `rgba(0, 0, 0, ${value})`,
-
-        textValue: value =>
-            `Прозрачность: ${Math.round(value * 100)}%`
+        cssValue: value => `rgba(0, 0, 0, ${value})`,
+        textValue: value => `Прозрачность: ${Math.round(value * 100)}%`
     });
 
-
     // BLUR
-
     setupSlider({
         sliderId: 'blur_slider',
         textId: 'blurTxt',
         storageKey: 'bg-blur',
         cssVariable: '--blur',
 
-        cssValue: value =>
-            `${value}px`,
-
-        textValue: value =>
-            `Размытие: ${value} ур.`
+        cssValue: value => `${value}px`,
+        textValue: value => `Размытие: ${value} ур.`
     });
-
-
 
     // =====================================
     // DROPDOWN MENU
     // =====================================
 
     const menuButton = document.getElementById('dropdown-btn');
-
     if (menuButton) {
-
         const dropdown = menuButton.closest('.dropdown');
         const header = menuButton.closest('.header');
-
         let menuIsOpen = false;
 
         function openMenu() {
@@ -164,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function closeMenu() {
             if (!menuIsOpen) return;
-
             menuIsOpen = false;
 
             header?.classList.remove('mobile-menu-open');
@@ -183,19 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeMenu();
-            }
+            if (e.key === 'Escape') {closeMenu();}
         });
 
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 640) {
-                closeMenu();
-            }
+            if (window.innerWidth > 640) {closeMenu();}
         });
     }
-
-
 
     // =====================================
     // NOTIFICATIONS
@@ -207,69 +181,37 @@ document.addEventListener('DOMContentLoaded', () => {
         ?.querySelector('.notification-text');
 
     if (notification && notificationText) {
-
         let notificationTimer;
 
         const messages = {
-
-            'IND':
-                'IND (Indulgence) — При первом нарушении данного пункта нарушителю будет выдано устное предупреждение.',
-
-            'IND-T':
-                'IND (Indulgence) — Если участник находится на сервере менее 14-ти дней, то за первое нарушение данного пункта нарушителю будет выдано устное предупреждение.',
-
-            'RES':
-                'RES (Reset) — В некоторых случаях за нарушение данного пункта нарушителю может быть снято XP в !rank.',
-
-            'TOS':
-                'ToS (Terms of Service) — Условия предоставления сервисов Discord. Данный пункт взят из правил ToS Discord.',
-
-            'AUTO-MOD':
-                'AUTO MOD (Automatic Moderation) — Данный пункт частично или полностью модерируется с помощью автомодерации бота JuniperBot.',
-
-            'REGEX':
-                'RegeX — Данный пункт частично модерируется с помощью автоматической системы, проверяющей профиль участника на наличие запрещенных символов.'
-
+            'IND': 'IND (Indulgence) — При первом нарушении данного пункта нарушителю будет выдано устное предупреждение.',
+            'IND-T': 'IND (Indulgence) — Если участник находится на сервере менее 14-ти дней, то за первое нарушение данного пункта нарушителю будет выдано устное предупреждение.',
+            'RES': 'RES (Reset) — В некоторых случаях за нарушение данного пункта нарушителю может быть снято XP в !rank.',
+            'TOS': 'ToS (Terms of Service) — Условия предоставления сервисов Discord. Данный пункт взят из правил ToS Discord.',
+            'AUTO-MOD': 'AUTO MOD (Automatic Moderation) — Данный пункт частично или полностью модерируется с помощью автомодерации бота JuniperBot.',
+            'REGEX': 'RegeX — Данный пункт частично модерируется с помощью автоматической системы, проверяющей профиль участника на наличие запрещенных символов.'
         };
-
 
         function hideNotification() {
             clearTimeout(notificationTimer);
-
             notification.classList.remove('visible');
         }
 
-
         notification.addEventListener('click', hideNotification);
 
-
         document.addEventListener('click', (e) => {
-
-            const target = e.target.closest(
-                '.IND, .IND-T, .RES, .TOS, .AUTO-MOD, .REGEX'
-            );
+            const target = e.target.closest('.IND, .IND-T, .RES, .TOS, .AUTO-MOD, .REGEX');
 
             if (!target) return;
-
-            const className = [...target.classList].find(
-                name => Object.hasOwn(messages, name)
-            );
+            const className = [...target.classList].find(name => Object.hasOwn(messages, name));
 
             if (!className) return;
-
             notificationText.textContent = messages[className];
 
             clearTimeout(notificationTimer);
 
             notification.classList.add('visible');
-
-            notificationTimer = setTimeout(
-                hideNotification,
-                5000
-            );
-
+            notificationTimer = setTimeout(hideNotification, 5000);
         });
-
     }
-
 });
