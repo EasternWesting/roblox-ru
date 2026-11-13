@@ -226,11 +226,14 @@ tag.REGEX {
     }
 }
 
+.header a {
+    text-decoration: none;
+}
+
 .header .icon {
     display: flex;
     align-items: center;
     user-select: none;
-    text-decoration: none;
 }
 
 .header .icon span {
