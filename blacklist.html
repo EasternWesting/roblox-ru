@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <title>ROBLOX RU</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+
+        <link rel="icon" href="icons/roblox.png">
+        <link rel="stylesheet" href="styles/blacklist.css"> <!-- Стиль страницы -->
+    </head>
+
+    <body>
+        <div id="loader" class="loader-overlay">
+            <div class="loader-spinner"></div>
+            <p>Загрузка страницы...</p>
+            <button id="skip-loader" class="skip-btn" type="button">Пропустить</button>
+        </div>
+        <video class="background-video" autoplay muted loop playsinline><source src="icons/bg.webm" type="video/mp4"></video>
+
+        <div class="notification hidden" id="notification">
+            <span class="notification-text">???</span>
+        </div>
+
+        <div class="header">
+            <div class="icon">
+                <img src="icons/roblox.png" width="36">
+                <span>ROBLOX RU</span>
+            </div>
+
+            <div class="btns">
+                <a href="rules.html">Правила сервера</a>
+                <div class="line"></div>
+                <a class="active">Чёрный список</a>
+            </div>
+
+            <div class="dropdown">
+                <button id="dropdown-btn" class="dropdown-btn" aria-expanded="false" aria-label="Открыть меню">
+                    <div class="bars">
+                        <div class="bar" id="one"></div>
+                        <div class="bar" id="two"></div>
+                        <div class="bar" id="three"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        </div>
+
+        <div class="welcome">
+            <div class="texts">
+                <span class="name">Чёрный список</span>
+                <span class="descr">На этой странице предоставлена информация о пользователях, занесеннных в чёрный список сервера.</span>
+            </div>
+
+            <div class="icon">
+                <img src="icons/roblox.png" width="250">
+            </div>
+        </div>
+
+        <div class="blacklist-btns">
+            <button class="visible" data-target="full-blacklist">Расширенный чёрный список</button>
+
+            <button data-target="basic-blacklist">Обычный чёрный список</button>
+        </div>
+
+        <div class="blacklist-info">
+            <span class="ri1" id="ri1">Таблица пользователей</span>
+        </div>
+
+        <div class="blacklist-list">
+            <div class="blacklist active basic-blacklist" id="basic-blacklist">
+                <div class="example rowing">
+                    <span class="number">№</span>
+                    <span class="nickname">Никнейм пользователя</span>
+                    <span class="admin">Никнейм администратора</span>
+                    <span class="type">Тип ЧС</span>
+                    <span class="time">Время занесения</span>
+                    <span class="reason">Причины занесения</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">1</span>
+                    <span class="nickname">dyrlaw_</span>
+                    <span class="admin">.westing</span>
+                    <span class="type">ЧСП</span>
+                    <span class="time">до 02.10.2027</span>
+                    <span class="reason">ГНПС, РАС</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">2</span>
+                    <span class="nickname">k0r0l2oo6</span>
+                    <span class="admin">.westing</span>
+                    <span class="type">ЧСП (ЧСИП)</span>
+                    <span class="time">до 28.11.2026</span>
+                    <span class="reason">СНП</span>
+                </div>
+            </div>
+            <div class="blacklist full-blacklist" id="full-blacklist">
+                <div class="example rowing">
+                    <span class="number">№</span>
+                    <span class="nickname">Никнейм пользователя</span>
+                    <span class="admin">Никнейм администратора</span>
+                    <span class="ilva">ИлВА</span>
+                    <span class="type">Тип ЧС</span>
+                    <span class="time">Время занесения</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">1</span>
+                    <span class="nickname">ayojerk</span>
+                    <span class="admin">mtveykk</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">2</span>
+                    <span class="nickname">rattish.</span>
+                    <span class="admin">floweff</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">3</span>
+                    <span class="nickname">the_yra</span>
+                    <span class="admin">mtveykk</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">4</span>
+                    <span class="nickname">s*xbin.**g</span>
+                    <span class="admin">.westing</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">5</span>
+                    <span class="nickname">lutiksss</span>
+                    <span class="admin">mtveykk</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">6</span>
+                    <span class="nickname">happerok1</span>
+                    <span class="admin">.westing</span>
+                    <span class="ilva">Нет</span>
+                    <span class="type">ЧСС (БВС)</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">7</span>
+                    <span class="nickname">zxctuxonya</span>
+                    <span class="admin">.westing</span>
+                    <span class="ilva">Да</span>
+                    <span class="type">ЧСС</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">8</span>
+                    <span class="nickname">gansrudel18</span>
+                    <span class="admin">.westing</span>
+                    <span class="ilva">Да</span>
+                    <span class="type">ЧСС</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">9</span>
+                    <span class="nickname">the_fatal</span>
+                    <span class="admin">mtveykk</span>
+                    <span class="ilva">Да</span>
+                    <span class="type">ЧСС</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+                <div class="rowing">
+                    <span class="number">10</span>
+                    <span class="nickname">mr_builderman.</span>
+                    <span class="admin">.westing</span>
+                    <span class="ilva">Да</span>
+                    <span class="type">ЧСС</span>
+                    <span class="time">Бессрочно</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="blacklist-types">
+            <span class="termins">Термины</span>
+            <div class="bl-type">
+                <span class="heading">Типы ЧС</span>
+                <div class="line"></div>
+                <div class="list">
+                    <div class="type">
+                        <span class="t1">ЧСС</span>
+                        <span class="t2">Чёрный список сервера</span>
+                    </div>
+                    <div class="type">
+                        <span class="t1">ЧСП</span>
+                        <span class="t2">Чёрный список персонала</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bl-puttype">
+                <span class="heading">Подтипы ЧС</span>
+                <div class="line"></div>
+                <div class="list">
+                    <div class="puttype">
+                        <span class="pt1">БВС</span>
+                        <span class="pt2">Общий запрет к серверу с блокировкой на сервере амнистий.</span>
+                    </div>
+                    <div class="puttype">
+                        <span class="pt1">ЧСМ</span>
+                        <span class="pt2">Чёрный список к должностям модерации</span>
+                    </div>
+                    <div class="puttype">
+                        <span class="pt1">ЧСИП</span>
+                        <span class="pt2">Чёрный список к должностям ивент персонала</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bl-reason">
+                <span class="heading">Причины занесения</span>
+                <div class="line"></div>
+                <div class="list">
+                    <div class="reason">
+                        <span class="r1">РАС</span>
+                        <span class="r2">Решение администрации сервера</span>
+                    </div>
+                    <div class="reason">
+                        <span class="r1">МНПС (МНПП)</span>
+                        <span class="r2">Многократное нарушение правил сервера или многократное нарушение правил персонала</span>
+                    </div>
+                    <div class="reason">
+                        <span class="r1">ГНПС (ГНПП)</span>
+                        <span class="r2">Грубое нарушение правил сервера или грубое нарушение правил персонала</span>
+                    </div>
+                    <div class="reason">
+                        <span class="r1">НВС</span>
+                        <span class="r2">Нанесение вреда серверу</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="settings-menu">
+                <span class="transpTxt" id="transpTxt">Прозрачность: 35%</span>
+                <input type="range" id="transp_slider" min="0.1" max="1" step="0.05" value="0.35">
+                <span class="blurTxt" id="blurTxt">Размытие: 10 ур.</span>
+                <input type="range" id="blur_slider" min="1" max="15" step="1" value="10">
+            </div>
+            <span class="author">© Copyright — ROBLOX RU | .westing</span>
+            <span class="version">v1.5 ALPHA</span>
+        </div>
+
+        <script src="scripts/blackllist.js"></script>
+    </body>
+</html>
