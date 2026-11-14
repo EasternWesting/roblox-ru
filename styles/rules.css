@@ -6,6 +6,7 @@
     color: #fff;
     hyphens: auto;
     overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 :root {
@@ -68,7 +69,8 @@ html, body {
 .skip-btn {
     margin-top: 20px;
     padding: 10px 20px;
-    background: rgba(236, 154, 78, 0.5);
+    color: rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0);
     border: 1px solid var(--border);
     border-radius: 6px;
     cursor: pointer;
